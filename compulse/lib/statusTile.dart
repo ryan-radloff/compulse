@@ -116,6 +116,8 @@ class _StatusTileState extends State<StatusTile> {
                 onPressed: () {
                   if (widget.videoPath == "") {
                     updateVideo(widget.taskText);
+                    DateTime d = DateTime.now();
+                  updateTime("Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
                   } else {
                     setVideo(!displayVideo);
                   }
