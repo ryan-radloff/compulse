@@ -1,4 +1,4 @@
-# TAMUHack-Spring-2022  
+# Check-Up (TAMUHack 2022)  
 # Purpose
 ## About
 Did you remember to turn the oven off? Was the curling iron unplugged when you left this morning? Is your car locked? People with anxiety and Obsessive Compulsive Disorder (OCD) struggle to remove these thoughts without repetitively checking first. Compulsive checking actions distract from daily routine and are exhausting to keep up with. Studies on OCD conclude that compulsive checking can worsen intrusive thoughts.
