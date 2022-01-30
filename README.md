@@ -38,8 +38,8 @@ Visual Studio Code
 Dart
 Google Cloud
 Golang
-PostgresQL
-Rest Api’s
+PostgreSQL
+Rest API’s
 Android Studio
 ## Accessibility
 Accessibility considerations are important for any product. In our application, we ensure all text is WCAG AA Accessible in color.
