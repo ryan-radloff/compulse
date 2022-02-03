@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'fileHandler.dart';
 import 'statusTile.dart';
 import 'newItemPage.dart';
-import 'login.dart';
-import 'serviceCalls.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const PRIMARY_COLOR = 0xFF2F3B48;
@@ -47,7 +45,6 @@ class _CheckUpAppState extends State<CheckUpApp> {
     List<StatusTile> s = await _listFuture;
     s.remove(t);
     write(s);
-    postUpdate(username, s);
     refreshList();
   }
 
@@ -55,7 +52,6 @@ class _CheckUpAppState extends State<CheckUpApp> {
     List<StatusTile> s = await _listFuture;
     s.add(t);
     write(s);
-    postUpdate(username, s);
     refreshList();
   }
 
@@ -92,7 +88,9 @@ class _CheckUpAppState extends State<CheckUpApp> {
                 appBar: AppBar(
                   backgroundColor: Color(PRIMARY_COLOR),
                   title: const Image(image: AssetImage('assets/banner.png')),
-                  actions: [TextButton(child: Icon(Icons.person, color: Color(BUTTON_GREEN),), onPressed: () {_login(context);},)],
+                  actions: [TextButton(child: Icon(Icons.settings, color: Color(BUTTON_GREEN),), onPressed: () {
+                    // TODO: Add route to settings page here
+                  },)],
                 ),
                 body: ReorderableListView(
                     children: items,
@@ -103,7 +101,6 @@ class _CheckUpAppState extends State<CheckUpApp> {
                       final StatusTile item = items.removeAt(oldIndex);
                       items.insert(newIndex, item);
                       write(items);
-                      postUpdate(username, items);
                     }),
                 floatingActionButton: FloatingActionButton(
                   foregroundColor: Color(SECONDARY_COLOR),
@@ -130,24 +127,6 @@ class _CheckUpAppState extends State<CheckUpApp> {
             ),
           ));
         });
-  }
-
-  void _login(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginRoute(),
-      ),
-    );
-    username = result[0];
-    if (result[1] == false) {
-      postInsert(result[0], await _listFuture);
-    } else {
-      _listFuture = getSelect(result[0], removeItemList);
-      List<StatusTile> s = await _listFuture;
-      write(s);
-      refreshList();
-    }
   }
 
   void _awaitAcess(BuildContext context) async {
