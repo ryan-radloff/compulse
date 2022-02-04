@@ -39,9 +39,15 @@ class CheckUpApp extends StatefulWidget {
 class _CheckUpAppState extends State<CheckUpApp> {
   String username = "";
   late Future<List<StatusTile>> _listFuture;
-  
+
+  void writeItemList() async {
+    write(await _listFuture);
+  }
 
   void removeItemList(StatusTile t) async {
+    if (t.videoPath != "") {
+      delete(t.videoPath);
+    }
     List<StatusTile> s = await _listFuture;
     s.remove(t);
     write(s);
@@ -68,7 +74,7 @@ class _CheckUpAppState extends State<CheckUpApp> {
   }
 
   Future<List<StatusTile>> updateList() async {
-    return await read(removeItemList);
+    return await read(removeItemList, writeItemList);
   }
 
   @override
@@ -89,6 +95,7 @@ class _CheckUpAppState extends State<CheckUpApp> {
                   backgroundColor: Color(PRIMARY_COLOR),
                   title: const Image(image: AssetImage('assets/banner.png')),
                   actions: [TextButton(child: Icon(Icons.settings, color: Color(BUTTON_GREEN),), onPressed: () {
+                    clear();
                     // TODO: Add route to settings page here
                   },)],
                 ),
@@ -138,7 +145,7 @@ class _CheckUpAppState extends State<CheckUpApp> {
     );
     if (result != null) {
       setState(() {
-        addItemList(StatusTile(taskText: result, isDone: false, key: Key(result), timeDone: "Not done yet", videoPath: "", delete: removeItemList,));
+        addItemList(StatusTile(taskText: result, isDone: false, key: Key(result), timeDone: "Not done yet", videoPath: "", displayVideo: false, delete: removeItemList, write: write));
       });
   }
   }

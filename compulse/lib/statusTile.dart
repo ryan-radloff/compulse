@@ -15,6 +15,8 @@ class StatusTile extends StatefulWidget {
   String videoPath;
   Key key;
   Function delete;
+  Function write;
+  bool displayVideo;
 
   StatusTile(
       {required this.taskText,
@@ -22,7 +24,9 @@ class StatusTile extends StatefulWidget {
       required this.key,
       required this.timeDone,
       required this.videoPath,
-      required this.delete});
+      required this.displayVideo,
+      required this.delete,
+      required this.write,});
 
   void remove() {
     delete(this);
@@ -36,17 +40,16 @@ class StatusTile extends StatefulWidget {
       "taskText": taskText,
       "timeDone": timeDone,
       "isDone": isDone.toString(),
-      "videoPath": videoPath
+      "videoPath": videoPath,
+      "displayVideo": displayVideo.toString()
     };
   }
 }
 
 class _StatusTileState extends State<StatusTile> {
-  var displayVideo = false;
-
   void setVideo(bool b) {
     setState(() {
-      displayVideo = b;
+      widget.displayVideo = b;
     });
   }
 
@@ -71,72 +74,96 @@ class _StatusTileState extends State<StatusTile> {
   }
 
   List<Widget> expand() {
-    if (displayVideo == true && widget.videoPath != "") {
-      return [Column(children: [ButtonBar(
-        children: [
-          TextButton(
-            style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
-            onPressed: () {
-              widget.remove();
-            },
-            child: Icon(Icons.delete_forever)),
-          TextButton(
-            style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
-            onPressed: () {
-              setVideo(!displayVideo);
-            },
-            child: widget.videoPath == "" ? Icon(Icons.camera_alt) : Icon(Icons.play_arrow)),
-            TextButton(
-              style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
-              onPressed: () {
-                setVideo(false);
-                widget.videoPath = "";
-                DateTime d = DateTime.now();
-                updateTime("Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
-              },
-              child: Icon(Icons.check)),
-        ],
-      alignment: MainAxisAlignment.center,
-      ),
-      VideoPlayerScreen(widget.videoPath),
-      ],
-      )
-    ];
+    if (widget.displayVideo == true && widget.videoPath != "") {
+      return [
+        Column(
+          children: [
+            ButtonBar(
+              children: [
+                TextButton(
+                    style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                    onPressed: () {
+                      widget.remove();
+                    },
+                    child: Icon(Icons.delete_forever)),
+                TextButton(
+                    style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                    onPressed: () {
+                      setVideo(!widget.displayVideo);
+                      widget.write();
+                    },
+                    child: Icon(Icons.play_arrow)),
+                TextButton(
+                    style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                    onPressed: () {
+                      setVideo(false);
+                      widget.videoPath = "";
+                      DateTime d = DateTime.now();
+                      updateTime(
+                          "Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
+                      widget.write();
+                    },
+                    child: Icon(Icons.check)),
+              ],
+              alignment: MainAxisAlignment.center,
+            ),
+            VideoPlayerScreen(widget.videoPath),
+          ],
+        )
+      ];
     } else {
-      return [ButtonBar(
+      return [
+        ButtonBar(
           children: [
             TextButton(
-              style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all(Color(BUTTON_GREEN))),
                 onPressed: () {
                   widget.remove();
                 },
                 child: Icon(Icons.delete_forever)),
             TextButton(
-              style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all(Color(BUTTON_GREEN))),
                 onPressed: () {
                   if (widget.videoPath == "") {
                     updateVideo(widget.taskText);
                     DateTime d = DateTime.now();
-                  updateTime("Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
+                    updateTime(
+                        "Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
                   } else {
-                    setVideo(!displayVideo);
+                    setVideo(!widget.displayVideo);
                   }
-                  
+                  widget.write();
                 },
-                child: widget.videoPath == "" ? Icon(Icons.camera_alt) : Icon(Icons.play_arrow)),
+                child: widget.videoPath == ""
+                    ? Icon(Icons.camera_alt)
+                    : Icon(Icons.play_arrow)),
             TextButton(
-              style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Color(BUTTON_GREEN))),
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all(Color(BUTTON_GREEN))),
                 onPressed: () {
                   setVideo(false);
                   widget.videoPath = "";
                   DateTime d = DateTime.now();
                   updateTime(
                       "Last completed on ${d.month}/${d.day}/${d.year} at ${d.hour}:${d.minute}");
+                  widget.write();
                 },
                 child: Icon(Icons.check)),
           ],
           alignment: MainAxisAlignment.center,
-        )];
+        )
+      ];
     }
   }
 
@@ -148,10 +175,15 @@ class _StatusTileState extends State<StatusTile> {
       backgroundColor: Color(PRIMARY_COLOR),
       collapsedBackgroundColor: Color(PRIMARY_COLOR),
       key: widget.key,
-      title: Text(widget.taskText, style: TextStyle(color: Color(SECONDARY_COLOR)),),
-      subtitle: Text(widget.timeDone, style: TextStyle(color: Color(SECONDARY_COLOR)),),
+      title: Text(
+        widget.taskText,
+        style: TextStyle(color: Color(SECONDARY_COLOR)),
+      ),
+      subtitle: Text(
+        widget.timeDone,
+        style: TextStyle(color: Color(SECONDARY_COLOR)),
+      ),
       children: expand(),
     );
+  }
 }
-}
-

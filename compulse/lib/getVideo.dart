@@ -10,6 +10,6 @@ Future<String> recordToDisk(String name) async {
   XFile? videoFile = await ImagePicker().pickVideo(source: ImageSource.camera, maxDuration: const Duration(seconds: 10));
   final directory = await getApplicationDocumentsDirectory();
 
-  videoFile?.saveTo(directory.path + "/$name.max");
-  return (directory.path + "/$name.max");
+  videoFile?.saveTo(directory.path + "/$name.ma");
+  return (directory.path + "/$name.ma");
 }
